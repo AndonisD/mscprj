@@ -18,15 +18,17 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String body;
+
     @Column(name = "poster")
     private String username;
 
     @ManyToOne
-    @JoinColumn(name = "poster_id") //FIXME: add username... or not to allow for anonymous posts
+    @JoinColumn(name = "poster_id") //FIXME: add username... or not to allow for anonymous posts?
     private User poster;
 
     @OneToMany
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "post_id")
     private List<Response> responses;
     
 }

@@ -1,6 +1,9 @@
 package uk.ac.kcl.mscPrj.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
@@ -15,12 +18,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @NotBlank
+    @Size(min=3, max = 50)
+    @Column(name = "username", unique = true)
     private String username;
     
     @Column(name = "email", unique = true)
+    @Email
     private String email;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "poster")
     private List<Post> posts;
 }
