@@ -10,10 +10,18 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@AllArgsConstructor
+@AllArgsConstructor //custom one instead??
 @NoArgsConstructor
 @Data
 public class User {
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.isVerified=false;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,6 +34,12 @@ public class User {
     @Column(name = "email", unique = true)
     @Email
     private String email;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "verified")
+    private boolean isVerified;
 
     @OneToMany(mappedBy = "poster")
     private List<Post> posts;
