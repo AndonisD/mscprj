@@ -24,19 +24,18 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String body;
-
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "poster_id") //FIXME: add username... or not to allow for anonymous posts?
     private User poster;
 
-
     @Column(name = "anonymous")
     private Boolean isAnonymous;
 
+    private String body;
+
     @OneToMany
     @JoinColumn(name = "post_id")
-    private List<Response> responses;
+    private List<Reply> replies;
     
 }
