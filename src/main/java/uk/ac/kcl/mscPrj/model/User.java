@@ -1,4 +1,4 @@
-package uk.ac.kcl.mscPrj.entity;
+package uk.ac.kcl.mscPrj.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

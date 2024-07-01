@@ -1,4 +1,4 @@
-package uk.ac.kcl.mscPrj.entity;
+package uk.ac.kcl.mscPrj.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

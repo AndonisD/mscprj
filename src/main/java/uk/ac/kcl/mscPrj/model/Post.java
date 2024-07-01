@@ -1,4 +1,4 @@
-package uk.ac.kcl.mscPrj.entity;
+package uk.ac.kcl.mscPrj.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
