@@ -43,4 +43,6 @@ public class User {
 
     @OneToMany(mappedBy = "poster")
     private List<Post> posts;
+
+    private String roles;
 }

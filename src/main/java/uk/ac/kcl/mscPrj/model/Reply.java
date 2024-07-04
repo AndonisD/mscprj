@@ -32,4 +32,6 @@ public class Reply {
 
     private String body;
 
+    private Integer points;
+
 }

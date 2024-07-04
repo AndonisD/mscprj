@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class RegistrationRequest {
     @NotNull
     @Size(min = 1)
     private String username;
