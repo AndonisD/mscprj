@@ -38,7 +38,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwtToken = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwtToken);
+            username = jwtUtil.extractUsername(jwtToken); //FIXME: validateToken first?
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){

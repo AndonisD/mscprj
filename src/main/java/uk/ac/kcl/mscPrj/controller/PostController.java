@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.ac.kcl.mscPrj.dto.PostDTO;
 import uk.ac.kcl.mscPrj.dto.ReplyDTO;
+import uk.ac.kcl.mscPrj.dto.VoteDTO;
 import uk.ac.kcl.mscPrj.payload.AbstractResponse;
 import uk.ac.kcl.mscPrj.service.PostService;
 
@@ -26,8 +27,14 @@ public class PostController {
     }
 
     @PostMapping("/submitReply")
-    public ResponseEntity<AbstractResponse> addNewPost(@Valid @RequestBody ReplyDTO reply, Authentication authentication) {
+    public ResponseEntity<AbstractResponse> addNewReply(@Valid @RequestBody ReplyDTO reply, Authentication authentication) {
         AbstractResponse response = postService.addNewReply(reply, authentication);
+        return new ResponseEntity<>(response, response.getStatus());
+    }
+
+    @PostMapping("/rateReply")
+    public ResponseEntity<AbstractResponse> rateReply(@Valid @RequestBody VoteDTO voteDTO, Authentication authentication) {
+        AbstractResponse response = postService.rateReply(voteDTO, authentication);
         return new ResponseEntity<>(response, response.getStatus());
     }
 }

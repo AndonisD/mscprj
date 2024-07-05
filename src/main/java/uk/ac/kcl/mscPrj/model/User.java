@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class User {
-
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
@@ -43,6 +42,10 @@ public class User {
 
     @OneToMany(mappedBy = "poster")
     private List<Post> posts;
+
+    @OneToMany
+    @JoinColumn(name = "voter_id")
+    private List<Vote> votes;
 
     private String roles;
 }

@@ -6,14 +6,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import uk.ac.kcl.mscPrj.dto.PostDTO;
 import uk.ac.kcl.mscPrj.dto.ReplyDTO;
+import uk.ac.kcl.mscPrj.dto.VoteDTO;
 import uk.ac.kcl.mscPrj.model.Post;
 import uk.ac.kcl.mscPrj.model.Reply;
 import uk.ac.kcl.mscPrj.model.User;
+import uk.ac.kcl.mscPrj.model.Vote;
 import uk.ac.kcl.mscPrj.payload.AbstractResponse;
 import uk.ac.kcl.mscPrj.payload.StatusResponse;
 import uk.ac.kcl.mscPrj.repository.PostRepository;
 import uk.ac.kcl.mscPrj.repository.ReplyRepository;
 import uk.ac.kcl.mscPrj.repository.UserRepository;
+import uk.ac.kcl.mscPrj.repository.VoteRepository;
 import uk.ac.kcl.mscPrj.service.PostService;
 
 @Service
@@ -22,6 +25,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final ReplyRepository replyRepository;
+    private final VoteRepository voteRepository;
 
     @Override
     public AbstractResponse addNewPost(PostDTO post, Authentication authentication) {
@@ -37,5 +41,22 @@ public class PostServiceImpl implements PostService {
         Reply newReply = new Reply(poster, post, reply.getBody());
         replyRepository.save(newReply);
         return new StatusResponse("Reply submitted successfully", HttpStatus.CREATED);
+    }
+
+    @Override
+    public AbstractResponse rateReply(VoteDTO voteDTO, Authentication authentication) {
+        Reply reply = replyRepository.getReferenceById(voteDTO.getReplyId());
+        User voter = userRepository.findByUsername(authentication.getName());
+        Vote existingingVote = voteRepository.findByReplyAndVoter(reply, voter);
+
+        if (existingingVote == null) {
+            Vote newVote = new Vote(reply, voter, voteDTO.getUpVote());
+            voteRepository.save(newVote);
+        } else if (existingingVote.getUpVote() != voteDTO.getUpVote()) {
+            existingingVote.setUpVote(voteDTO.getUpVote());
+            voteRepository.save(existingingVote);
+        }
+
+        return new StatusResponse("Rating submitted successfully", HttpStatus.CREATED);
     }
 }

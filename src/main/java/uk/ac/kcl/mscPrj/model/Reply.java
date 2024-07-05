@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "replies")
 @AllArgsConstructor
@@ -32,6 +34,8 @@ public class Reply {
 
     private String body;
 
-    private Integer points;
+    @OneToMany
+    @JoinColumn(name = "reply_id")
+    private List<Vote> votes;
 
 }
