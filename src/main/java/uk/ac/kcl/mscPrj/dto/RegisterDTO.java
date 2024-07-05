@@ -1,17 +1,19 @@
 package uk.ac.kcl.mscPrj.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import uk.ac.kcl.mscPrj.validation.ValidEmailDomain;
 
 @Data
-public class RegistrationRequest {
+public class RegisterDTO {
     @NotNull
     @Size(min = 1)
     private String username;
 
-//  @ValidEmail - custom validator can be used
-//  @Email(message = "Email should be valid", regexp = "^[A-Za-z0-9+_.-]+@uni-sofia.com")
+    @Email(message = "Invalid email")
+    @ValidEmailDomain(message = "Please register with your student email")
     @NotNull
     @Size(min = 1)
     private String email;

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "votes")
 @Data
 @NoArgsConstructor
-public class Vote {
+public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -18,15 +18,15 @@ public class Vote {
     private Reply reply;
 
     @ManyToOne
-    @JoinColumn(name = "voter_id")
-    private User voter;
+    @JoinColumn(name = "rater_id")
+    private User rater;
 
     @Column(name = "up_vote")
     private Boolean upVote;
 
-    public Vote(Reply reply, User voter, Boolean upVote) {
+    public Rating(Reply reply, User rater, Boolean upVote) {
         this.reply = reply;
-        this.voter = voter;
+        this.rater = rater;
         this.upVote = upVote;
     }
 }

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class VoteDTO {
+public class RateReplyDTO {
     @NotNull
     private Long replyId;
 

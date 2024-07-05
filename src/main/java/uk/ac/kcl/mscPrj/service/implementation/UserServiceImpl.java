@@ -1,14 +1,9 @@
 package uk.ac.kcl.mscPrj.service.implementation;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.authentication.AbstractUserDetailsReactiveAuthenticationManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uk.ac.kcl.mscPrj.dto.AuthenticationRequest;
-import uk.ac.kcl.mscPrj.dto.RegistrationRequest;
+import uk.ac.kcl.mscPrj.dto.LoginDTO;
+import uk.ac.kcl.mscPrj.dto.RegisterDTO;
 import uk.ac.kcl.mscPrj.model.VerificationToken;
 import uk.ac.kcl.mscPrj.model.User;
 import uk.ac.kcl.mscPrj.payload.AbstractResponse;
@@ -47,14 +42,14 @@ public class UserServiceImpl implements UserService {
     private AuthenticationManager authenticationManager;
 
     @Override
-    public AbstractResponse registerUser(RegistrationRequest user, String appUrl) {
+    public AbstractResponse registerUser(RegisterDTO user, String appUrl) {
 
         User newUser;
 
         if (userRepository.existsByEmail(user.getEmail())) {
             User existingUser = userRepository.findByEmailIgnoreCase(user.getEmail());
             if (existingUser.isVerified()){
-                return new StatusResponse("Error: Email is already in use!", HttpStatus.BAD_REQUEST);
+                return new StatusResponse("Error: Email is already in use!", HttpStatus.BAD_REQUEST); //FIXME: https://medium.com/@aedemirsen/spring-boot-global-exception-handler-842d7143cf2a
             } else {
                 newUser = existingUser;
             }
@@ -62,6 +57,8 @@ public class UserServiceImpl implements UserService {
             String password = passwordEncoder.encode(user.getPassword());
             newUser = new User(user.getUsername(), user.getEmail(), password);
         }
+
+        //FIXME: need to check for username as well
 
         userRepository.save(newUser);
 
@@ -114,7 +111,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AbstractResponse loginUser(AuthenticationRequest request) {
+    public AbstractResponse loginUser(LoginDTO request) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())

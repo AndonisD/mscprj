@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class ReplyDTO {
+public class SubmitReplyDTO {
 
     @NotNull
     private Long postId;

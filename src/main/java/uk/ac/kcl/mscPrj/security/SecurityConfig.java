@@ -53,6 +53,7 @@ public class SecurityConfig{
 //                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken").permitAll())
 //                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/user/**").authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/posts/**").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/**").permitAll())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .authenticationProvider(authenticationProvider())

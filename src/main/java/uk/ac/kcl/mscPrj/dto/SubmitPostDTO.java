@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class PostDTO {
+public class SubmitPostDTO {
     @NotNull
     @Size(min = 1, max = 500)
     private String body;

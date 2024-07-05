@@ -36,6 +36,6 @@ public class Reply {
 
     @OneToMany
     @JoinColumn(name = "reply_id")
-    private List<Vote> votes;
+    private List<Rating> ratings;
 
 }

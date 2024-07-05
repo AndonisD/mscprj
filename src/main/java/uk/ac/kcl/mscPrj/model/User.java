@@ -44,8 +44,8 @@ public class User {
     private List<Post> posts;
 
     @OneToMany
-    @JoinColumn(name = "voter_id")
-    private List<Vote> votes;
+    @JoinColumn(name = "rater_id")
+    private List<Rating> ratings;
 
     private String roles;
 }
