@@ -9,13 +9,12 @@ import uk.ac.kcl.mscPrj.validation.ValidEmailDomain;
 @Data
 public class RegisterDTO {
     @NotNull
-    @Size(min = 1)
+    @Size(min = 3)
     private String username;
 
     @Email(message = "Invalid email")
     @ValidEmailDomain(message = "Please register with your student email")
     @NotNull
-    @Size(min = 1)
     private String email;
 
     @NotNull

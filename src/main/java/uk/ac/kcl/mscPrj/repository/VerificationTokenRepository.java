@@ -11,5 +11,4 @@ public interface VerificationTokenRepository extends JpaRepository<VerificationT
 
     Boolean existsByUser(User user);
 
-
 }

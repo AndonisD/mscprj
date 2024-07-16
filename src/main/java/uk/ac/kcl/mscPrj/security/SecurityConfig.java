@@ -3,6 +3,7 @@ package uk.ac.kcl.mscPrj.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,14 +51,14 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http, JwtRequestFilter authFilter) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-//                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken").permitAll())
-//                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/user/**").authenticated())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/posts/**").authenticated())
+//                .authorizeHttpRequests(auth -> auth.requestMatchers("/swagger-ui/index.html").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/admin/**").hasRole("ADMIN"))
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/posts/**").hasRole("USER"))
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/**").permitAll())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .httpBasic(Customizer.withDefaults())
                 .build();
     }
 }

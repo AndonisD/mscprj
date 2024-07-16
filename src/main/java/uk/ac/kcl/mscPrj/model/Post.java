@@ -10,7 +10,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "posts")
-@AllArgsConstructor //FIXME: may be a better idea to make a custom constructor without responses
 @NoArgsConstructor
 @Data
 public class Post {
@@ -26,7 +25,7 @@ public class Post {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "poster_id") //FIXME: add username... or not to allow for anonymous posts?
+    @JoinColumn(name = "poster_id")
     private User poster;
 
     @Column(name = "anonymous")

@@ -15,6 +15,4 @@ public class EmailDomainValidator implements ConstraintValidator<ValidEmailDomai
         String domain = email.substring(email.indexOf("@") + 1);
         return allowedEmailDomains.contains(domain);
     }
-
-
 }

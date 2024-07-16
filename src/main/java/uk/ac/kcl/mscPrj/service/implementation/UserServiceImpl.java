@@ -7,6 +7,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +25,8 @@ import uk.ac.kcl.mscPrj.security.JwtUtil;
 import uk.ac.kcl.mscPrj.service.EmailService;
 import uk.ac.kcl.mscPrj.service.UserService;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -75,7 +78,7 @@ public class UserServiceImpl implements UserService {
         confirmationEmail.setTo(user.getEmail());
         confirmationEmail.setSubject("Complete Registration");
         confirmationEmail.setText("Click on this link to complete your registration: "
-                + appUrl + "/api/users/verifyEmail?token="+ verificationToken.getVerificationToken());
+                + appUrl + "/api/auth/verifyEmail?token="+ verificationToken.getVerificationToken());
 
         return emailService.sendConfirmationEmail(confirmationEmail);
     }
@@ -84,7 +87,6 @@ public class UserServiceImpl implements UserService {
     public AbstractResponse verifyEmail(String verificationToken) {
 
         VerificationToken token = verificationTokenRepository.findByVerificationToken(verificationToken);
-        System.out.println("yeet");
 
         if(token != null)
         {
@@ -106,8 +108,14 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                new ArrayList<>()
+                getAuthorities(user.getRole())
         );
+    }
+
+    private Set<GrantedAuthority> getAuthorities(String role) {
+        return new HashSet<>(){{
+            add(new SimpleGrantedAuthority("ROLE_" + role));
+        }};
     }
 
     @Override

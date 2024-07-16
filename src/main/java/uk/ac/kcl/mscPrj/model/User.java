@@ -10,7 +10,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@AllArgsConstructor //custom one instead??
 @NoArgsConstructor
 @Data
 public class User {
@@ -19,6 +18,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.isVerified=false;
+        this.role="USER";
     }
 
     @Id
@@ -47,5 +47,7 @@ public class User {
     @JoinColumn(name = "rater_id")
     private List<Rating> ratings;
 
-    private String roles;
+    @Column(name = "roles")
+    private String role;
+
 }
