@@ -54,7 +54,6 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
-
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -85,6 +84,22 @@
 			<artifactId>jaxb-runtime</artifactId>
 			<version>2.3.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>io.gatling</groupId>
+			<artifactId>gatling-app</artifactId>
+			<version>3.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.gatling.highcharts</groupId>
+			<artifactId>gatling-charts-highcharts</artifactId>
+			<version>3.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.javafaker</groupId>
+			<artifactId>javafaker</artifactId>
+			<version>1.0.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -101,7 +116,14 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>io.gatling</groupId>
+				<artifactId>gatling-maven-plugin</artifactId>
+				<version>4.2.9</version>
+				<configuration>
+					<simulationClass>uk.ac.kcl.mscPrj.RegistrationSimulation</simulationClass>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>

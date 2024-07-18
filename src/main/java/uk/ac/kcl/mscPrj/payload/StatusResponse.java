@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 @AllArgsConstructor
