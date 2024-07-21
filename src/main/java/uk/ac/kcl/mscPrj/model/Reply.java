@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Reply {
+public class Reply extends AbstractReportable implements Reportable {
 
     public Reply(User poster, Post post, String body){
         this.poster = poster;

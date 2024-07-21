@@ -5,21 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import uk.ac.kcl.mscPrj.dto.*;
-import uk.ac.kcl.mscPrj.model.Post;
-import uk.ac.kcl.mscPrj.model.Reply;
-import uk.ac.kcl.mscPrj.model.User;
-import uk.ac.kcl.mscPrj.model.Rating;
+import uk.ac.kcl.mscPrj.model.*;
 import uk.ac.kcl.mscPrj.payload.AbstractResponse;
 import uk.ac.kcl.mscPrj.payload.DataResponse;
 import uk.ac.kcl.mscPrj.payload.StatusResponse;
-import uk.ac.kcl.mscPrj.repository.PostRepository;
-import uk.ac.kcl.mscPrj.repository.ReplyRepository;
-import uk.ac.kcl.mscPrj.repository.UserRepository;
-import uk.ac.kcl.mscPrj.repository.RateRepository;
+import uk.ac.kcl.mscPrj.repository.*;
 import uk.ac.kcl.mscPrj.service.PostService;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +22,7 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final ReplyRepository replyRepository;
     private final RateRepository rateRepository;
+    private final ReportRepository reportRepository;
 
     @Override
     public AbstractResponse addNewPost(SubmitPostDTO post, Authentication authentication) {
@@ -77,5 +72,52 @@ public class PostServiceImpl implements PostService {
         GetPostDTO responsePost = new GetPostDTO(username, post.getBody(), repliesDTO);
 
         return new DataResponse(responsePost, HttpStatus.CREATED);
+    }
+
+    @Override
+    public AbstractResponse reportPost(ReportDTO reportDTO, Authentication authentication) {
+        User reporter = userRepository.findByUsername(authentication.getName());
+        Optional<Post> post = postRepository.findById(reportDTO.getReportableId());
+        if (post.isEmpty()){
+            return new StatusResponse("Post not found", HttpStatus.NOT_FOUND);
+        }
+        Report report = new Report(reporter, post.get(), "Post");
+        reportRepository.save(report);
+        return new StatusResponse("Report submitted successfully", HttpStatus.CREATED);
+    }
+
+    @Override
+    public AbstractResponse reportReply(ReportDTO reportDTO, Authentication authentication) {
+        User reporter = userRepository.findByUsername(authentication.getName());
+        Optional<Reply> reply = replyRepository.findById(reportDTO.getReportableId());
+        if (reply.isEmpty()){
+            return new StatusResponse("Reply not found", HttpStatus.NOT_FOUND);
+        }
+        Report report = new Report(reporter, reply.get(), "Reply");
+        reportRepository.save(report);
+        return new StatusResponse("Report submitted successfully", HttpStatus.CREATED);
+    }
+
+    @Override
+    public AbstractResponse getReports() {
+        Map<String, Integer> reportsMap = new HashMap<>();
+
+
+        Map<String, Integer> finalReportsMap = reportsMap;
+        
+        reportRepository.findAll().forEach(report -> {
+            String key = report.getReportableType() + " | " + report.getReportable().getId();
+            finalReportsMap.put(key, finalReportsMap.getOrDefault(key, 0) + 1);
+        });
+
+        reportsMap = finalReportsMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+        GetReportsDTO reportsDTO = new GetReportsDTO(reportsMap);
+        return new DataResponse(reportsDTO, HttpStatus.CREATED);
     }
 }

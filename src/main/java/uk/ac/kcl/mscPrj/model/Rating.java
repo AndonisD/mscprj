@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "votes")
 @Data
 @NoArgsConstructor
-public class Rating {
+public class Rating implements Reportable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

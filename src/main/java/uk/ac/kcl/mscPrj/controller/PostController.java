@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import uk.ac.kcl.mscPrj.dto.ReportDTO;
 import uk.ac.kcl.mscPrj.dto.SubmitPostDTO;
 import uk.ac.kcl.mscPrj.dto.SubmitReplyDTO;
 import uk.ac.kcl.mscPrj.dto.RateReplyDTO;
@@ -40,6 +41,18 @@ public class PostController {
     @PostMapping("/rateReply")
     public ResponseEntity<AbstractResponse> rateReply(@Valid @RequestBody RateReplyDTO rateReplyDTO, Authentication authentication) {
         AbstractResponse response = postService.rateReply(rateReplyDTO, authentication);
+        return new ResponseEntity<>(response, response.getStatus());
+    }
+
+    @PostMapping("/reportPost")
+    public ResponseEntity<AbstractResponse> reportPost(@Valid @RequestBody ReportDTO reportDTO, Authentication authentication) {
+        AbstractResponse response = postService.reportPost(reportDTO, authentication);
+        return new ResponseEntity<>(response, response.getStatus());
+    }
+
+    @PostMapping("/reportReply")
+    public ResponseEntity<AbstractResponse> reportReply(@Valid @RequestBody ReportDTO reportDTO, Authentication authentication) {
+        AbstractResponse response = postService.reportReply(reportDTO, authentication);
         return new ResponseEntity<>(response, response.getStatus());
     }
 }

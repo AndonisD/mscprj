@@ -1,6 +1,7 @@
 package uk.ac.kcl.mscPrj.service;
 
 import org.springframework.security.core.Authentication;
+import uk.ac.kcl.mscPrj.dto.ReportDTO;
 import uk.ac.kcl.mscPrj.dto.SubmitPostDTO;
 import uk.ac.kcl.mscPrj.dto.SubmitReplyDTO;
 import uk.ac.kcl.mscPrj.dto.RateReplyDTO;
@@ -14,4 +15,10 @@ public interface PostService {
     AbstractResponse rateReply(RateReplyDTO rateReplyDTO, Authentication authentication);
 
     AbstractResponse getPost(Long id);
+
+    AbstractResponse reportPost(ReportDTO reportDTO, Authentication authentication);
+
+    AbstractResponse reportReply(ReportDTO reportDTO, Authentication authentication);
+
+    AbstractResponse getReports();
 }

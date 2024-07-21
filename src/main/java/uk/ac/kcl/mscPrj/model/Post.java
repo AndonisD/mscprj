@@ -12,16 +12,16 @@ import java.util.List;
 @Table(name = "posts")
 @NoArgsConstructor
 @Data
-public class Post {
+public class Post extends AbstractReportable implements Reportable{
     public Post(String body, User poster, Boolean isAnonymous){
         this.body = body;
         this.poster = poster;
         this.isAnonymous = isAnonymous;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
 
     @JsonIgnore
     @ManyToOne
