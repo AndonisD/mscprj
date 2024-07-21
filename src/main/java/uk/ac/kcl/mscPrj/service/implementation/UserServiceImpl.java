@@ -112,6 +112,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public AbstractResponse banUser(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isEmpty()){
+            return new StatusResponse("User not found", HttpStatus.NOT_FOUND);
+        }
+        User userUpdated = user.get();
+        userUpdated.setVerified(false);
+        userRepository.save(userUpdated);
+        return new StatusResponse("User banned", HttpStatus.ACCEPTED);
+    }
+
+    @Override
     public AbstractResponse verifyEmail(String verificationToken) {
 
         VerificationToken token = verificationTokenRepository.findByVerificationToken(verificationToken);
