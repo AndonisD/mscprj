@@ -3,12 +3,12 @@ package uk.ac.kcl.mscPrj.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
-public class UserDTO {
-    private String username;
+public class GetReplyDTO {
+    private String poster;
 
-    private String reputation;
+    private String body;
+
+    private Integer rating;
 }

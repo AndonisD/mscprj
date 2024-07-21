@@ -14,12 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uk.ac.kcl.mscPrj.configuration.ReputationMarkersConfig;
 import uk.ac.kcl.mscPrj.dto.LoginDTO;
 import uk.ac.kcl.mscPrj.dto.RegisterDTO;
-import uk.ac.kcl.mscPrj.dto.UserDTO;
-import uk.ac.kcl.mscPrj.model.Rating;
-import uk.ac.kcl.mscPrj.model.Reply;
+import uk.ac.kcl.mscPrj.dto.GetUserDTO;
 import uk.ac.kcl.mscPrj.model.VerificationToken;
 import uk.ac.kcl.mscPrj.model.User;
 import uk.ac.kcl.mscPrj.payload.AbstractResponse;
@@ -169,7 +166,7 @@ public class UserServiceImpl implements UserService {
 
         String reputation = getReputationMarker(score);
 
-        UserDTO responseUser = new UserDTO(user.getUsername(), reputation);
+        GetUserDTO responseUser = new GetUserDTO(user.getUsername(), reputation);
 
         return new DataResponse(responseUser, HttpStatus.ACCEPTED);
     }

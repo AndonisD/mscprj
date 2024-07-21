@@ -23,10 +23,16 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/user")
-    public ResponseEntity<AbstractResponse> getUser(@RequestParam("id") Long id) throws IOException {
+    @GetMapping("/getById")
+    public ResponseEntity<AbstractResponse> getUserByID(@RequestParam("id") Long id) throws IOException {
         AbstractResponse response = userService.getUser(id);
         return new ResponseEntity<>(response, response.getStatus());
     }
+
+//    @GetMapping("/getByUsername")
+//    public ResponseEntity<AbstractResponse> getUserByUsername(@RequestParam("id") String username) throws IOException {
+//        AbstractResponse response = userService.getUser(username);
+//        return new ResponseEntity<>(response, response.getStatus());
+//    }
 
 }

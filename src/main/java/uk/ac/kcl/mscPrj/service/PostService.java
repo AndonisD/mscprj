@@ -12,4 +12,6 @@ public interface PostService {
     AbstractResponse addNewReply(SubmitReplyDTO reply, Authentication authentication);
 
     AbstractResponse rateReply(RateReplyDTO rateReplyDTO, Authentication authentication);
+
+    AbstractResponse getPost(Long id);
 }
