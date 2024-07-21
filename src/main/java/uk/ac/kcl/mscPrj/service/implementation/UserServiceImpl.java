@@ -1,6 +1,7 @@
 package uk.ac.kcl.mscPrj.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,26 +14,36 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uk.ac.kcl.mscPrj.configuration.ReputationMarkersConfig;
 import uk.ac.kcl.mscPrj.dto.LoginDTO;
 import uk.ac.kcl.mscPrj.dto.RegisterDTO;
+import uk.ac.kcl.mscPrj.dto.UserDTO;
+import uk.ac.kcl.mscPrj.model.Rating;
+import uk.ac.kcl.mscPrj.model.Reply;
 import uk.ac.kcl.mscPrj.model.VerificationToken;
 import uk.ac.kcl.mscPrj.model.User;
 import uk.ac.kcl.mscPrj.payload.AbstractResponse;
+import uk.ac.kcl.mscPrj.payload.DataResponse;
 import uk.ac.kcl.mscPrj.payload.StatusResponse;
+import uk.ac.kcl.mscPrj.repository.RateRepository;
+import uk.ac.kcl.mscPrj.repository.ReplyRepository;
 import uk.ac.kcl.mscPrj.repository.UserRepository;
 import uk.ac.kcl.mscPrj.repository.VerificationTokenRepository;
 import uk.ac.kcl.mscPrj.security.JwtUtil;
 import uk.ac.kcl.mscPrj.service.EmailService;
 import uk.ac.kcl.mscPrj.service.UserService;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private  UserRepository userRepository;
+    @Autowired
+    private ReplyRepository replyRepository;
+    @Autowired
+    private RateRepository rateRepository;
     @Autowired
     private  EmailService emailService;
     @Autowired
@@ -43,6 +54,13 @@ public class UserServiceImpl implements UserService {
     private  JwtUtil jwtUtil;
     @Autowired @Lazy
     private AuthenticationManager authenticationManager;
+
+//    @Autowired
+//    private ReputationMarkersConfig reputationConfig;
+
+    @Value("#{${repuation-markers}}")
+    private Map<String, String> repuationMarkers;
+
 
     @Override
     public AbstractResponse registerUser(RegisterDTO user, String appUrl) {
@@ -130,5 +148,39 @@ public class UserServiceImpl implements UserService {
         UserDetails userDetails = loadUserByUsername(request.getUsername());
         String token = jwtUtil.generateToken(userDetails);
         return new StatusResponse(token, HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    public AbstractResponse getUser(Long id) {
+        Optional<User> optUser = userRepository.findById(id);
+
+        if (optUser.isEmpty()){
+            return new StatusResponse("User not found", HttpStatus.NOT_FOUND);
+        }
+
+        User user = optUser.get();
+
+        int score = 0;
+
+        score = replyRepository.findAllByPoster(user).stream()
+                .flatMap(reply -> rateRepository.findAllByReply(reply).stream())
+                .mapToInt(rating -> rating.getUpVote() ? 1 : -1)
+                .sum();
+
+        String reputation = getReputationMarker(score);
+
+        UserDTO responseUser = new UserDTO(user.getUsername(), reputation);
+
+        return new DataResponse(responseUser, HttpStatus.ACCEPTED);
+    }
+
+    private String getReputationMarker(int score) {
+        return repuationMarkers.entrySet().stream()
+                .map(entry -> new AbstractMap.SimpleEntry<>(Integer.parseInt(entry.getKey()), (entry.getValue())))
+                .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                .filter(entry -> score >= entry.getKey())
+                .map(Map.Entry::getValue)
+                .reduce((first, second) -> second)
+                .orElse("");
     }
 }

@@ -11,4 +11,6 @@ public interface UserService extends UserDetailsService{
     AbstractResponse verifyEmail(String confirmationToken);
 
     AbstractResponse loginUser(LoginDTO request);
+
+    AbstractResponse getUser(Long id);
 }

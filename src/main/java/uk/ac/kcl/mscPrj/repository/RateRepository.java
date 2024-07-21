@@ -5,6 +5,10 @@ import uk.ac.kcl.mscPrj.model.Reply;
 import uk.ac.kcl.mscPrj.model.User;
 import uk.ac.kcl.mscPrj.model.Rating;
 
+import java.util.List;
+
 public interface RateRepository extends JpaRepository<Rating, Long> {
     Rating findByReplyAndRater(Reply reply, User voter);
+
+    public List<Rating> findAllByReply(Reply reply);
 }
