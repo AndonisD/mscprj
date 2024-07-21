@@ -8,6 +8,12 @@ import uk.ac.kcl.mscPrj.validation.ValidEmailDomain;
 
 @Data
 public class RegisterDTO {
+    public RegisterDTO(String username, String email, String password){
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
     @NotNull
     @Size(min = 3)
     private String username;

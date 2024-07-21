@@ -51,7 +51,7 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http, JwtRequestFilter authFilter) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-//                .authorizeHttpRequests(auth -> auth.requestMatchers("/swagger-ui/index.html").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/swagger-ui/index.html").hasRole("ADMIN"))
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/admin/**").hasRole("ADMIN"))
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/posts/**").hasRole("USER"))
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll())

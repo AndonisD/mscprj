@@ -13,4 +13,6 @@ public interface UserService extends UserDetailsService{
     AbstractResponse loginUser(LoginDTO request);
 
     AbstractResponse getUser(Long id);
+
+    void addAdmin(RegisterDTO admin);
 }

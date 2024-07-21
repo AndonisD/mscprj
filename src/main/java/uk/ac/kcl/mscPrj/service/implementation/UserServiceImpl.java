@@ -98,6 +98,19 @@ public class UserServiceImpl implements UserService {
         return emailService.sendConfirmationEmail(confirmationEmail);
     }
 
+    public void addAdmin(RegisterDTO user) {
+
+        if (userRepository.existsByEmail(user.getEmail()) || userRepository.existsByUsername(user.getUsername())){
+            return;
+        }
+
+        String password = passwordEncoder.encode(user.getPassword());
+
+        User newAdmin = new User(user.getUsername(), user.getEmail(), password, "ADMIN");
+
+        userRepository.save(newAdmin);
+    }
+
     @Override
     public AbstractResponse verifyEmail(String verificationToken) {
 
